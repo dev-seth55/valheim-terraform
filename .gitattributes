@@ -1,0 +1,6 @@
+# Always use LF line endings, regardless of the OS that checks this out.
+# Shell scripts and cloud-init templates run on Linux and break on CRLF.
+* text=auto eol=lf
+
+# Binary files: never touch line endings
+*.zip binary
