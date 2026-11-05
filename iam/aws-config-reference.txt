@@ -1,0 +1,34 @@
+# Reference for ~/.aws/config (Windows: C:\Users\<you>\.aws\config).
+# With aws-vault, this file holds CONFIGURATION only — no secrets. Your
+# actual access key/secret never touches disk; aws-vault stores it encrypted
+# in the OS credential store (Windows Credential Manager / macOS Keychain)
+# when you run `aws-vault add terraform-caller`.
+
+[profile admin]
+region = us-east-1
+
+[profile terraform-caller]
+region = us-east-1
+
+[profile terraform-deployer]
+region         = us-east-1
+role_arn       = arn:aws:iam::REPLACE_ME_AWS_ACCOUNT_ID:role/terraform-deployer
+source_profile = terraform-caller
+mfa_serial     = REPLACE_ME_MFA_DEVICE_ARN
+
+# REPLACE_ME_MFA_DEVICE_ARN is the *Identifier* shown under IAM > Users > terraform-caller
+# > Security credentials > Multi-factor authentication. It ends in whatever
+# device name you typed when assigning the MFA (e.g. mfa/terraform-caller-phone),
+# which is NOT automatically the username. Copy it exactly; a mismatch fails
+# AssumeRole with "MultiFactorAuthentication failed, unable to validate MFA code".
+
+# Nothing here runs automatically. aws-vault only acts when you explicitly
+# wrap a command:
+#   aws-vault exec terraform-deployer -- terraform plan
+# That triggers: pull terraform-caller's key from the OS keychain, prompt
+# for your MFA code (satisfying the trust policy's Condition block), assume
+# terraform-deployer, inject the temporary session into that one command's
+# process only, then discard it when the command exits. The session is
+# cached for reuse until it expires, so you're not re-entering MFA on every
+# single command within the same window — but a bare `terraform plan`
+# typed without the `aws-vault exec` wrapper still has zero access.

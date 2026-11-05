@@ -1,0 +1,2 @@
+aws_region  = "us-east-1"
+bucket_name = "REPLACE_ME_STATE_BUCKET"   # must match main.tf backend block + iam policy

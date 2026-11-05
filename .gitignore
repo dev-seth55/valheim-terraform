@@ -1,0 +1,33 @@
+# Secrets and per-machine values (server password, key paths)
+*.tfvars
+!*.tfvars.example
+
+# Local state (bootstrap/ keeps its state on disk by design) and backups.
+# Note: .terraform.lock.hcl is intentionally NOT ignored — commit it.
+*.tfstate
+*.tfstate.*
+
+# Provider binaries and backend config cache
+.terraform/
+
+# Plan files can contain sensitive values
+*.tfplan
+crash.log
+valheim-control.zip
+
+# Keys, certificates, local env files
+*.pem
+*.key
+*.p12
+*.pfx
+.env
+.env.*
+
+# Scratch files from manual Lambda/URL testing (see docs/troubleshooting.md)
+payload.json
+ping.json
+out.json
+
+# Built locally by discord/layer/build-layer.sh — third-party binary, not committed
+discord/layer/pynacl-layer.zip
+discord/layer/python/

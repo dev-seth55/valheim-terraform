@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "hashicorp.terraform",
+    "vscodevim.vim",
+    "amazonwebservices.aws-toolkit-vscode"
+  ]
+}

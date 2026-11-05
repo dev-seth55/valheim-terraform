@@ -1,0 +1,15 @@
+[
+  {
+    "name": "valheim",
+    "description": "Control the Valheim server",
+    "options": [
+      { "type": 1, "name": "start",  "description": "Start the server (takes ~2 minutes)" },
+      { "type": 1, "name": "status", "description": "Show whether it's up and how many players are on" },
+      { "type": 1, "name": "stop",   "description": "Stop the server (world is saved and backed up first)",
+        "options": [
+          { "type": 5, "name": "force", "description": "Stop even if players are online", "required": false }
+        ]
+      }
+    ]
+  }
+]
