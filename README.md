@@ -8,36 +8,36 @@ I built it for a small private group, and it's been in real use since September 
 
 ```mermaid
 flowchart LR
-    subgraph Operator["Operator workstation"]
-        AV["aws-vault<br/>(key in OS keychain)"]
-        TF["terraform plan / apply"]
+    subgraph Operator["Operator"]
+        AV["aws-vault<br/>OS keychain"]
+        TF["terraform<br/>plan / apply"]
     end
 
     subgraph AWS["AWS account"]
-        STS["STS AssumeRole<br/>MFA required"]
-        STATE[("S3 state bucket<br/>native locking")]
-        subgraph Control["Serverless control plane"]
-            URL["Lambda function URL"]
-            LAMBDA["Lambda: valheim-control<br/>Python 3.12"]
+        STS["STS<br/>AssumeRole<br/>MFA required"]
+        STATE[("S3 state<br/>bucket<br/>locking")]
+        subgraph Control["Control plane"]
+            URL["Lambda<br/>function URL"]
+            LAMBDA["Lambda<br/>Python 3.12"]
             EB["EventBridge<br/>every 5 min"]
         end
-        EC2["EC2 t3a.medium<br/>Ubuntu 24.04<br/>systemd game service"]
+        EC2["EC2<br/>t3a.medium<br/>Ubuntu 24.04"]
         EIP["Elastic IP"]
-        BACKUP[("S3 backup bucket<br/>versioned, encrypted,<br/>30-day expiry")]
+        BACKUP[("S3 backups<br/>versioned<br/>encrypted<br/>30-day expiry")]
     end
 
-    DISCORD["Discord<br/>/valheim start | stop | status"]
-    PLAYERS["Steam players"]
+    DISCORD["Discord<br/>/valheim<br/>commands"]
+    PLAYERS["Steam<br/>players"]
 
     AV --> STS --> TF
     TF --> STATE
     TF -. provisions .-> AWS
-    DISCORD -- "Ed25519-signed request" --> URL --> LAMBDA
-    EB -- "idle check" --> LAMBDA
-    LAMBDA -- "start / stop / tag<br/>(one instance only)" --> EC2
-    LAMBDA -- "player count<br/>(Steam A2S, UDP)" --> EC2
-    PLAYERS -- "UDP 2456-2457" --> EIP --> EC2
-    EC2 -- "hourly + on shutdown" --> BACKUP
+    DISCORD -- "signed<br/>request" --> URL --> LAMBDA
+    EB -- "idle<br/>check" --> LAMBDA
+    LAMBDA -- "start / stop<br/>one instance" --> EC2
+    LAMBDA -- "player<br/>count" --> EC2
+    PLAYERS -- "UDP<br/>2456-2457" --> EIP --> EC2
+    EC2 -- "hourly +<br/>on stop" --> BACKUP
 ```
 
 ## What it does
